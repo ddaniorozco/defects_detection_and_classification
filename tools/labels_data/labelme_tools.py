@@ -36,35 +36,21 @@ class ConvertersTools:
             json.dump(labelme_dict, json_file, indent=2)
 
     @staticmethod
-    def create_polygon_shape(label_name, contour_points, filter_points=1):
+    def polygon_2_rectangle(data):
 
-        points = [[x, y] for index, (x, y) in enumerate(contour_points) if label_name != 'fruit' or index % filter_points == 0]
+        access_shapes = data['shapes']
+        for data_shapes in access_shapes:
+            access_points = data_shapes['points']
+            # print (access_points)
 
-        shape_dict = {
-                        'label': label_name,
-                        'points': points,
-                        'group_id': None,
-                        'shape_type': 'polygon',
-                        'flags': {}
-                      }
+            min_val_x = min(x[0] for x in access_points)
+            min_val_y = min(x[1] for x in access_points)
+            max_val_x = max(x[0] for x in access_points)
+            max_val_y = max(x[1] for x in access_points)
+            new_points = [[min_val_x, min_val_y], [max_val_x, max_val_y]]
 
-        return shape_dict
+            # saved_points.append(new_points)
 
-    @staticmethod
-    def create_rectangle_shape(label_name, input_points, image_width, image_height):
+            data_shapes['points'] = new_points
 
-        xmin, ymin, xmax, ymax = input_points
-        points = [[int(round(xmax * image_width)), int(round(ymin * image_height))], [int(round(xmin * image_width)),
-                                                                                      int(round(ymax * image_height))]]
-
-        label_name = label_name.lower()
-
-        shape_dict = {
-                        'label': label_name,
-                        'points': points,
-                        'group_id': None,
-                        'shape_type': 'rectangle',
-                        'flags': {}
-                      }
-
-        return shape_dict
+        return data
