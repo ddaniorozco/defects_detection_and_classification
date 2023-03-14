@@ -1,0 +1,8 @@
+asyncssh
+boto3
+azure-core==1.26.1
+azure-mgmt-resource
+azure-mgmt-compute
+azure-mgmt-network==22.1.0
+azure-identity
+msrest==0.7.1
